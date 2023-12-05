@@ -91,7 +91,7 @@ jobs:
 
       - name: Rename wheel file
         run: |
-          mv ./dist/default.dist.*.whl ./dist/detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{ matrix.os }}.whl
+          mv ./dist/*.whl ./dist/detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{ matrix.os }}.whl
 
       - name: Upload wheel
         uses: actions/upload-artifact@v3
