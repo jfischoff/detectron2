@@ -82,13 +82,13 @@ jobs:
       # New steps for release
       - name: Create Release
         id: create_release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          # Example: use the combination of run number and current timestamp for unique tag
+          tag_name: release-${{ github.run_number }}-${{ github.run_attempt }}-${{ github.event_name }}-${{ github.ref_name }}-${{ github.sha }}
+          release_name: Release ${{ github.run_number }}-${{ github.run_attempt }}-${{ github.event_name }}-${{ github.ref_name }}-${{ github.sha }}
           draft: false
           prerelease: false
 
