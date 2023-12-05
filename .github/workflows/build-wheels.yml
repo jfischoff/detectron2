@@ -78,3 +78,27 @@ jobs:
         with:
           name: detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{matrix.os}}-wheel
           path: dist/*.whl
+
+      # New steps for release
+      - name: Create Release
+        id: create_release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload wheel to release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/*.whl
+          asset_name: detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{matrix.os}}-wheel.whl
+          asset_content_type: application/octet-stream
