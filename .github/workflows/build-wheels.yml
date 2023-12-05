@@ -89,13 +89,20 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload wheel to release
+      - name: Find and upload wheel file
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          WHEEL_FILE=$(ls ./dist/*.whl)
+          echo "Found wheel file: $WHEEL_FILE"
+          echo "::set-output name=wheel_file::$WHEEL_FILE"
+        id: find_wheel
+
+      - name: Upload wheel to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/*.whl
-          asset_name: detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{matrix.os}}-wheel.whl
+          asset_path: ${{ steps.find_wheel.outputs.wheel_file }}
+          asset_name: ${{ steps.find_wheel.outputs.wheel_file }}
           asset_content_type: application/octet-stream
