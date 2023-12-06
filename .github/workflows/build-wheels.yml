@@ -60,16 +60,6 @@ jobs:
           python setup.py bdist_wheel
       - name: List wheel files
         run: ls ./dist
-      - name: Upload wheel
-        uses: actions/upload-artifact@v3
-        with:
-          name: detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-${{matrix.os}}-wheel
-          path: dist/*.whl
-      - name: Build and install linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          python -m pip install -e .[all]
-          python -m detectron2.utils.collect_env
       - name: Rename wheel file
         run: |
           mv ./dist/*.whl ./dist/detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-linux_x86_64.whl
@@ -79,6 +69,12 @@ jobs:
         with:
           name: detectron2-${{ matrix.python }}-pytorch${{ matrix.torch }}-linux_x86_64.wheel
           path: ./dist/*.whl
+      - name: Build and install linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          python -m pip install -e .[all]
+          python -m detectron2.utils.collect_env
+
 
       # New steps for release
       - name: Create Release
