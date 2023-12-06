@@ -90,7 +90,6 @@ jobs:
           prerelease: false
 
       - name: Find and upload wheel file
-        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.10'
         run: |
           WHEEL_FILE=$(ls ./dist/*.whl)
           echo "Found wheel file: $WHEEL_FILE"
@@ -98,7 +97,6 @@ jobs:
         id: find_wheel
 
       - name: Upload wheel to release
-        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.10'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
